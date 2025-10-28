@@ -1,0 +1,96 @@
+/* Mobile: 1 columna */
+@media (max-width: 480px) {
+  .main__profile {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .main__add-button {
+    width: 60px;           /* más pequeño */
+    height: 35px;
+    font-size: 20px;       /* reduce el tamaño del "+" */
+    margin: 10px auto;     /* centrado horizontal y algo de margen arriba/abajo */
+    display: block;        /* para que tome todo el ancho y el margin auto funcione */
+  }
+  
+  .main__gallery-list {
+    grid-template-columns: 1fr !important; /* 1 columna que ocupe todo el ancho */
+    max-width: 100% !important;
+    padding: 0 10px !important; /* un poco de padding lateral para respirar */
+    max-height: none !important; /* quitar límite de altura para evitar scroll vertical no deseado */
+    overflow-y: visible !important; /* mostrar todo sin scroll */
+  }
+
+  .main__card {
+    height: auto !important;      /* que la altura se adapte */
+    margin: 0 auto !important;    /* centrar la tarjeta */
+    max-width: 100% !important;   /* ocupar todo el ancho disponible */
+  }
+
+  .main__title {
+    max-width: 75% !important;    /* ajustar título para el espacio del like */
+  }
+}
+@media (max-width: 480px) {
+  .main__gallery-list {
+    display: grid;
+    grid-template-columns: repeat(1, 1fr);  /* 1 columnas flexibles */
+    gap: 20px;
+    justify-content: center;
+    max-height: 90vh;
+    overflow-y: auto;
+    padding: 10px 0;
+    margin: 0 auto;
+    width: 100%;
+  }
+
+  .main__card {
+    max-width: 300px;               /* limita ancho de tarjeta */
+    height: 300px;
+    width: 100%;
+  }
+}
+
+/* Tablet: 2 columnas */
+@media (min-width: 481px) and (max-width: 1023px) {
+  .main__gallery-list {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);  /* 2 columnas flexibles */
+    gap: 20px;
+    justify-content: center;
+    max-height: 90vh;
+    overflow-y: auto;
+    padding: 10px 0;
+    margin: 0 auto;
+    width: 100%;
+  }
+
+  .main__card {
+    max-width: 300px;               /* limita ancho de tarjeta */
+    height: 300px;
+    width: 100%;
+  }
+}
+
+/* Escritorio: 3 columnas */
+@media (min-width: 1024px) {
+  .main__gallery-list {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);  /* 3 columnas flexibles */
+    gap: 20px;
+    justify-content: center;
+    max-height: 90vh;
+    overflow-y: auto;
+    padding: 10px 0;
+    margin: 0 auto;
+    width: 100%;
+    max-width: 1100px;             /* ancho máximo opcional */
+  }
+
+  .main__card {
+    max-width: 300px;
+    height: 300px;
+    width: 100%;
+  }
+}

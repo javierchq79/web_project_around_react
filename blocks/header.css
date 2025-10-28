@@ -1,0 +1,25 @@
+/* Reset básico */
+* {
+  box-sizing: border-box;
+}
+
+/* HEADER */
+.header {
+  text-align: left;
+  width: 100%;
+  margin-top: 10vh;
+}
+
+.header__logo {
+  margin-top: 10vh;
+  margin-bottom: 4vh;
+  font-size: 30px;
+  font-weight: medium;
+  color: #fff; /* para que contraste con el fondo negro */
+}
+
+.header__sup {
+  font-size: 0.6em;
+  vertical-align: super;
+  line-height: 0;
+}

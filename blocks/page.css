@@ -1,0 +1,38 @@
+/* Reset box-sizing global para mejor manejo de dimensiones */
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
+/* Base global */
+html {
+  font-family: Inter, sans-serif;
+  font-feature-settings: 'liga' 1, 'calt' 1; /* fix para Chrome */
+  font-size: 16px;
+  background-color: #000000;
+  color: #ffffff;
+  min-height: 100vh;
+  margin: 0;
+}
+
+@supports (font-variation-settings: normal) {
+  html {
+    font-family: InterVariable, sans-serif;
+  }
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  min-height: 100vh;
+}
+
+/* Contenedor principal centrado y con máximo ancho */
+.page__content {
+  width: 100%;
+  max-width: 1600px;
+  margin: 0 auto;
+  padding-left: 10vw;
+  padding-right: 10vw;
+  min-height: 100vh; /* opcional, para que siempre tome toda la pantalla */
+}
+

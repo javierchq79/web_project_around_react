@@ -168,6 +168,13 @@
 }
 
 /* BOTÓN LIKE */
+
+.main__like-wrapper {
+  display: flex; /* ⬅️ Esto los pone uno al lado del otro */
+  align-items: center; /* Alineación vertical */
+  gap: 5px; /* Pequeño espacio entre el corazón y el número */
+}
+
 .main__like-button {
   background: none;
   border: none;
@@ -176,6 +183,16 @@
   transition: transform 0.2s ease;
   display: flex;
   align-items: center;
+}
+
+.main__like-count {
+  font-size: 1.2rem;
+  margin: 0;
+  color: #000;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+
 }
 
 .main__like-button:hover .main__like-icon {

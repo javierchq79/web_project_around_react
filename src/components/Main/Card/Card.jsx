@@ -1,29 +1,42 @@
-// src/components/Main/Card/Card.jsx
+import React from 'react'; 
+// O import { memo } from 'react'; si prefieres la desestructuración.
 
-export default function Card(props) {
-  // Desestructuración Correcta:
-  // 1. Extrae 'card' y 'onCardClick' directamente de props.
-  const { card, onCardClick } = props; 
+function Card(props) {
+  // 1. Desestructurar las nuevas props: onCardLike y onCardDelete
+  const { card, onCardClick, onCardLike, onCardDelete } = props; 
   
-  // 2. Extrae las propiedades de la tarjeta desde el objeto 'card'.
-  // Puedes renombrar 'card' para que quede limpio en el resto del código.
-  const { name, link, isLiked } = card; 
+  // Desestructurar propiedades de la tarjeta (incluyendo likes para el contador)
+  const { name, link, isLiked, likes } = card; 
 
-  // Función que se dispara al hacer clic en la imagen
+  // Función para abrir el popup de imagen
   function handleClick() {
-    onCardClick(card); // Llama a la función que recibimos, pasándole los datos de la tarjeta
+    onCardClick(card); 
+  }
+  
+  // 2. Controlador para dar/quitar "Me gusta"
+  function handleLikeClick() {
+  console.log("➡️ CARD: Clic detectado en tarjeta:", card._id); // ✅ Log 1
+  onCardLike(card); 
+}
+  
+  // 3. Controlador para eliminar la tarjeta
+  function handleDeleteClick() {
+    onCardDelete(card); // Llama a la función que recibimos de Main
   }
 
-// 👇 ¡LÍNEA FALTANTE QUE CAUSABA EL ERROR! 👇
   // Crea la clase condicional para el botón de "Me gusta"
   const likeButtonClassName = `main__like-button ${isLiked ? 'main__like-button_active' : ''}`;
-  // 👆 ------------------------------------------- 👆
-
+  
+  // Asumimos que el contador de likes se muestra con likes.length
+  
   return (
-    // CAMBIO 1: Reemplazar <li> por <article>
     <article className="main__card">
       {/* Botón de Eliminar */}
-      <button className="main__delete-button" aria-label="Eliminar">
+      <button 
+        className="main__delete-button" 
+        aria-label="Eliminar"
+        onClick={handleDeleteClick} // ⬅️ Adjuntar controlador de eliminación
+      >
         <svg
           className="main__delete-icon"
           xmlns="http://www.w3.org/2000/svg"
@@ -32,7 +45,6 @@ export default function Card(props) {
           stroke="currentColor"
           strokeWidth="2"
         >
-          {/* CAMBIO 2: stroke-width a strokeWidth */}
           <path
             strokeLinecap="round"
             strokeLinejoin="round"
@@ -54,7 +66,12 @@ export default function Card(props) {
         <h2 className="main__title">{name}</h2>
 
         {/* Botón de Like */}
-        <button className={likeButtonClassName} aria-label="Me gusta">
+        <div className="main__like-wrapper">
+          <button 
+            className={likeButtonClassName} 
+            aria-label="Me gusta"
+            onClick={handleLikeClick} // ⬅️ Adjuntar controlador de "Me gusta"
+        >
           <svg
             className="main__like-icon"
             xmlns="http://www.w3.org/2000/svg"
@@ -65,11 +82,17 @@ export default function Card(props) {
             strokeLinecap="round"
             strokeLinejoin="round"
           >
-            {/* CAMBIO 3: stroke-width a strokeWidth */}
             <path d="M20.8 4.6c-1.4-1.4-3.6-1.4-5 0l-.8.8-.8-.8c-1.4-1.4-3.6-1.4-5 0s-1.4 3.6 0 5l5.8 5.8 5.8-5.8c1.4-1.4 1.4-3.6 0-5z" />
           </svg>
         </button>
+        {/* 4. Mostrar el contador de likes */}
+        <span className="main__like-count">{likes ? likes.length : 0}</span> 
+        </div>
+        
       </div>
     </article>
   );
 }
+
+// 🎯 Optimización: Exportar el componente envuelto en React.memo
+export default React.memo(Card);

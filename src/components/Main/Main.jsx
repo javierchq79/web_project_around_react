@@ -1,51 +1,41 @@
-// src/components/Main/Main.jsx
-
-import { useState, useEffect, useContext } from 'react'; // ⬅️ Importar useContext
-import { CurrentUserContext } from '../../contexts/CurrentUserContext.js'; // ⬅️ Importar Contexto
+import { useState, useEffect, useContext } from 'react'; 
+import { CurrentUserContext } from '../../contexts/CurrentUserContext.js'; 
 // Importaciones de imágenes (rutas relativas a la carpeta 'src')
 import jacquesAvatar from '../../assets/images/jacques-avatar.jpg';
 import editIcon from '../../assets/images/Colebemis-Feather-Edit-3.svg';
 
 // Importaciones de la API y Componentes
-import { api } from '../../utils/api.js'; // ⬅️ 1. Importar la instancia de la API
-import Popup from "./Popup/Popup";
-import NewCard from "./form/NewCard/NewCard";
-import EditProfile from "./form/EditProfile/EditProfile";
-import EditAvatar from "./form/EditAvatar/EditAvatar";
+import { api } from '../../utils/api.js'; 
 import Card from './Card/Card';
-import ImagePopup from "./Popup/ImagePopup";
 
-export default function Main() {
+// 💡 Main ahora recibe los controladores de popup de App
+export default function Main({ onEditProfile, onAddPlace, onEditAvatar, onCardClick: openImagePopup }) {
+  
   // HOOKS Y ESTADOS DENTRO DEL COMPONENTE:
-  
-  // ⬅️ 2. Agregar la variable de estado 'cards'
   const [cards, setCards] = useState([]); 
-  const [popup, setPopup] = useState(null);
-  const [selectedCard, setSelectedCard] = useState(null); 
-  const currentUser = useContext(CurrentUserContext);
   
+  // ✅ Obtener currentUser del contexto para el perfil y likes
+  const { currentUser } = useContext(CurrentUserContext);
+  
+  // ----------------------------------------------------
   // A. FUNCIÓN PARA DAR/QUITAR LIKE
-
-// src/components/Main/Main.jsx
-
-// En Main.jsx
-
-async function handleCardLike(card) {
-    // 1. Calcula el estado actual (Si el usuario ID está en el array likes)
+  async function handleCardLike(card) {
+    // Calcula el estado actual (Si el usuario ID está en el array likes)
     const isCurrentlyLiked = (card.likes || []).some(i => i._id === currentUser?._id);
-    
-    // 2. Envía la NEGACIÓN del estado actual.
-    // Si isCurrentlyLiked es TRUE, enviamos FALSE (Quitar).
-    // Si isCurrentlyLiked es FALSE, enviamos TRUE (Poner).
-    await api.changeLikeCardStatus(card._id, !isCurrentlyLiked) 
-        .then((newCard) => {
-            // 3. Actualiza el estado de las tarjetas de forma inmutable
-            setCards((state) => state.map((currentCard) => 
-                currentCard._id === card._id ? newCard : currentCard
-            ));
-        })
-        .catch((error) => console.error("Error al cambiar estado de like:", error));
-}
+
+    try {
+      // Enviamos la negación: si está liked -> pedir que lo quite; si no -> pedir que lo ponga
+      // La lógica de Api.js debe manejar la inversión: TRUE para like, FALSE para unlike.
+      const newCard = await api.changeLikeCardStatus(card._id, !isCurrentlyLiked);
+
+      // Actualiza el estado con la tarjeta que regresó el backend
+      setCards((state) =>
+        state.map((c) => (c._id === card._id ? newCard : c))
+      );
+    } catch (error) {
+      console.error("Error al cambiar estado de like:", error);
+    }
+  }
 
   // B. FUNCIÓN PARA ELIMINAR TARJETA
   async function handleCardDelete(card) {
@@ -61,70 +51,33 @@ async function handleCardLike(card) {
   // ----------------------------------------------------
   // 3. AGREGAR useEffect para obtener las tarjetas de la API
   useEffect(() => {
+    // Solo cargamos tarjetas; la info de usuario se carga en App
     api.getInitialCards()
       .then((data) => {
-        // 4. Configurar los datos recibidos en el estado 'cards'
         setCards(data); 
       })
       .catch((err) => {
         console.error("Error al obtener las tarjetas iniciales:", err);
       });
-  }, []); // Array de dependencias vacío para ejecutarse SOLO al montar
-
-  // ----------------------------------------------------
-
-  // 2. DEFINICIÓN DE CONTENIDOS DE POPUP (título y children)
-  const newCardPopup = { title: 'Nuevo lugar', children: <NewCard /> };
-  const editProfilePopup = { title: 'Editar perfil', children: <EditProfile /> };
-  const editAvatarPopup = { title: 'Cambiar foto de perfil', children: <EditAvatar /> };
-
-  // 3. FUNCIONES DE MANEJO DE POPUP
-  function handleOpenPopup(popup) {
-    setPopup(popup);
-  }
-
-  function handleClosePopup() {
-    setPopup(null);
-    setSelectedCard(null); // Cierra también el popup de imagen
-  }
-
-  function handleCardClick(card) { 
-    setSelectedCard(card); // Abre la imagen
-  }
-
-  // Lógica para cierre con la tecla Esc
-  useEffect(() => {
-    if (popup || selectedCard) {
-      function handleEscClose(evt) {
-        if (evt.key === 'Escape') {
-          handleClosePopup();
-        }
-      }
-
-      document.addEventListener('keydown', handleEscClose);
-
-      return () => {
-        document.removeEventListener('keydown', handleEscClose);
-      };
-    }
-  }, [popup, selectedCard]); 
-
+  }, []); 
+  
   // ----------------------------------------------------
 
   return (
     <main className="main">
-      {/* Perfil (No modificado) */}
+      {/* Perfil */}
       <section className="main__profile">
         <div className="main__avatar">
           <img
-            src={jacquesAvatar}
-            alt="Foto de perfil de Jacques Cousteau"
+            // ✅ Usa el avatar de currentUser
+            src={currentUser.avatar || jacquesAvatar} 
+            alt={`Foto de perfil de ${currentUser.name || 'usuario'}`}
             className="main__avatar-image"
           />
           <button
             className="main__avatar-edit-button"
             aria-label="Editar avatar"
-            onClick={() => handleOpenPopup(editAvatarPopup)}
+            onClick={onEditAvatar} // ⬅️ Usa el prop de App
           >
             <img src={editIcon} alt="" />
           </button>
@@ -132,22 +85,24 @@ async function handleCardLike(card) {
 
         <div className="main__info">
           <div className="main__name-wrapper">
-            <h1 className="main__name">Jacques Cousteau</h1>
+            {/* ✅ Usa el nombre de currentUser */}
+            <h1 className="main__name">{currentUser.name || 'Cargando...'}</h1>
             <button
               className="main__edit-button"
               aria-label="Editar perfil"
-              onClick={() => handleOpenPopup(editProfilePopup)}
+              onClick={onEditProfile} // ⬅️ Usa el prop de App
             >
               <img src={editIcon} alt="" />
             </button>
           </div>
-          <p className="main__description">Explorador</p>
+          {/* ✅ Usa la descripción de currentUser */}
+          <p className="main__description">{currentUser.about || 'Explorador'}</p>
         </div>
 
         <button
           className="main__add-button"
           aria-label="Añadir"
-          onClick={() => handleOpenPopup(newCardPopup)}
+          onClick={onAddPlace} // ⬅️ Usa el prop de App
         >
           +
         </button>
@@ -156,38 +111,23 @@ async function handleCardLike(card) {
       {/* Galería */}
       <section className="main__gallery">
         <div className="main__gallery-list">
+          {cards.map((card) => {
+            // ✅ Cálculo de isLiked (para la Card)
+            const isLiked = (card.likes || []).some(i => i._id === currentUser?._id);
 
-          {/* Iteración de tarjetas: Ahora usa el estado 'cards' que viene de la API */}
-          {cards.map((card) => (
-            <Card
-              key={card._id}
-              card={card}
-              onCardClick={handleCardClick}
-              onCardLike={handleCardLike}      // ⬅️ Agregado: Función para dar/quitar like
-              onCardDelete={handleCardDelete}  // ⬅️ Agregado: Función para eliminar
-            />
-          ))}
-
+            return (
+              <Card
+                key={card._id}
+                card={card}
+                isLiked={isLiked} // ⬅️ Pasar el estado de like calculado
+                onCardClick={openImagePopup} // ⬅️ Usar el prop renombrado
+                onCardLike={handleCardLike}
+                onCardDelete={handleCardDelete}
+              />
+            );
+          })}
         </div>
       </section>
-
-      {/* ... (Popups renderizados condicionalmente) ... */}
-      {popup && (
-        <Popup
-          onClose={handleClosePopup}
-          title={popup.title}
-        >
-          {popup.children}
-        </Popup>
-      )}
-
-      {selectedCard && (
-        <ImagePopup
-          card={selectedCard}
-          onClose={handleClosePopup}
-        />
-      )}
-
     </main>
   );
 }

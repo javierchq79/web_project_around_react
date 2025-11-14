@@ -13,6 +13,7 @@
 }
 
 .popup_opened {
+  /* ✅ NECESARIO para que se vea */
   display: flex;
 }
 

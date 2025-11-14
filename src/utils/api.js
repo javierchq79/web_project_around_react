@@ -63,36 +63,42 @@ class Api {
   }
 
   // Dar "me gusta"
-  likeCard(cardId) {
-    return fetch(`${this._baseUrl}/cards/${cardId}/likes`, {
-      method: 'PUT',
-      headers: this._headers
-    })
-    .then(this._handleResponse);
-  }
+likeCard(cardId) {
+  return fetch(`${this._baseUrl}/cards/${cardId}/likes`, {
+    method: 'PUT',
+    headers: this._headers
+  })
+    .then(this._handleResponse)
+    .then(res => {
+      console.log("PUT LIKE RESPONSE:", res);
+      return res;
+    });
+}
 
   // Quitar "me gusta"
-  unlikeCard(cardId) {
-    return fetch(`${this._baseUrl}/cards/${cardId}/likes`, {
-      method: 'DELETE',
-      headers: this._headers
-    })
-    .then(this._handleResponse);
-  }
+unlikeCard(cardId) {
+  return fetch(`${this._baseUrl}/cards/${cardId}/likes`, {
+    method: 'DELETE',
+    headers: this._headers
+  })
+    .then(this._handleResponse)
+    .then(res => {
+      console.log("DELETE LIKE RESPONSE:", res);
+      return res;
+    });
+}
   
 
 changeLikeCardStatus(cardId, shouldBeLiked) { 
-    // shouldBeLiked es TRUE si queremos DAR LIKE (PUT).
-    // shouldBeLiked es FALSE si queremos QUITAR LIKE (DELETE).
-    
-    if (shouldBeLiked) {
-        // Queremos dar like (PUT)
-        return this.likeCard(cardId);
-    } else {
-        // Queremos quitar like (DELETE)
-        return this.unlikeCard(cardId);
-    }
+  if (shouldBeLiked) {
+    // TRUE → poner like (PUT)
+    return this.likeCard(cardId);
+  } else {
+    // FALSE → quitar like (DELETE)
+    return this.unlikeCard(cardId);
+  }
 }
+
 } // <--- ¡Llave de cierre, es la última de la clase, no borrar!
 
 // Token

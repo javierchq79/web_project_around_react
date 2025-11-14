@@ -1,41 +1,50 @@
-import React from 'react'; 
-// O import { memo } from 'react'; si prefieres la desestructuración.
+import React, { useContext } from "react";
+import { CurrentUserContext } from "../../../contexts/CurrentUserContext";
 
-function Card(props) {
-  // 1. Desestructurar las nuevas props: onCardLike y onCardDelete
-  const { card, onCardClick, onCardLike, onCardDelete } = props; 
+function Card({ card, onCardClick, onCardLike, onCardDelete }) {
+
+  const currentUser = useContext(CurrentUserContext);
+
+  // Datos de la tarjeta
+  const { name, link, likes } = card;
+
+  // ✔ Determinar si el usuario actual ya dio like
   
-  // Desestructurar propiedades de la tarjeta (incluyendo likes para el contador)
-  const { name, link, isLiked, likes } = card; 
+  const isLiked = card.isLiked === true;
 
-  // Función para abrir el popup de imagen
+
+
+  // ✔ Clase del botón
+  const likeButtonClassName = `main__like-button ${
+    isLiked ? "main__like-button_active" : ""
+  }`;
+
+  // Handlers
   function handleClick() {
-    onCardClick(card); 
-  }
-  
-  // 2. Controlador para dar/quitar "Me gusta"
-  function handleLikeClick() {
-  console.log("➡️ CARD: Clic detectado en tarjeta:", card._id); // ✅ Log 1
-  onCardLike(card); 
-}
-  
-  // 3. Controlador para eliminar la tarjeta
-  function handleDeleteClick() {
-    onCardDelete(card); // Llama a la función que recibimos de Main
+    onCardClick(card);
   }
 
-  // Crea la clase condicional para el botón de "Me gusta"
-  const likeButtonClassName = `main__like-button ${isLiked ? 'main__like-button_active' : ''}`;
-  
-  // Asumimos que el contador de likes se muestra con likes.length
-  
+  function handleLikeClick() {
+    console.log("LIKE CLICK en card:", card._id, "isLiked:", isLiked);
+    onCardLike(card);
+  }
+
+  function handleDeleteClick() {
+    onCardDelete(card);
+  }
+
+  console.log("CARD:", card._id, "LIKES:", card.likes);
+
+  console.log("CARD COMPLETA:", JSON.stringify(card, null, 2));
+
   return (
     <article className="main__card">
-      {/* Botón de Eliminar */}
-      <button 
-        className="main__delete-button" 
+      
+      {/* Botón de eliminar */}
+      <button
+        className="main__delete-button"
         aria-label="Eliminar"
-        onClick={handleDeleteClick} // ⬅️ Adjuntar controlador de eliminación
+        onClick={handleDeleteClick}
       >
         <svg
           className="main__delete-icon"
@@ -61,38 +70,39 @@ function Card(props) {
         onClick={handleClick}
       />
 
+      {/* Footer */}
       <div className="main__card-footer">
-        {/* Título */}
         <h2 className="main__title">{name}</h2>
 
-        {/* Botón de Like */}
         <div className="main__like-wrapper">
-          <button 
-            className={likeButtonClassName} 
+          <button
+            className={likeButtonClassName}
             aria-label="Me gusta"
-            onClick={handleLikeClick} // ⬅️ Adjuntar controlador de "Me gusta"
-        >
-          <svg
-            className="main__like-icon"
-            xmlns="http://www.w3.org/2000/svg"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="#888"
-            strokeWidth="2"
-            strokeLinecap="round"
-            strokeLinejoin="round"
+            onClick={handleLikeClick}
           >
-            <path d="M20.8 4.6c-1.4-1.4-3.6-1.4-5 0l-.8.8-.8-.8c-1.4-1.4-3.6-1.4-5 0s-1.4 3.6 0 5l5.8 5.8 5.8-5.8c1.4-1.4 1.4-3.6 0-5z" />
-          </svg>
-        </button>
-        {/* 4. Mostrar el contador de likes */}
-        <span className="main__like-count">{likes ? likes.length : 0}</span> 
+            <svg
+              className="main__like-icon"
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="#888"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            >
+              <path d="M20.8 4.6c-1.4-1.4-3.6-1.4-5 0l-.8.8-.8-.8c-1.4-1.4-3.6-1.4-5 0s-1.4 3.6 0 5l5.8 5.8 5.8-5.8c1.4-1.4 1.4-3.6 0-5z" />
+            </svg>
+          </button>
+
+          {/* Contador de likes */}
+<span className="main__like-count">
+  {card.isLiked ? 1 : 0}
+</span>
+
         </div>
-        
       </div>
     </article>
   );
 }
 
-// 🎯 Optimización: Exportar el componente envuelto en React.memo
 export default React.memo(Card);

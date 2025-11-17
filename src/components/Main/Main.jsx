@@ -7,7 +7,11 @@ import editIcon from '../../assets/images/Colebemis-Feather-Edit-3.svg';
 // Importaciones de la API y Componentes
 import { api } from '../../utils/api.js'; 
 import Card from './Card/Card';
-import Popup from "./Popup/Popup";
+import Popup from "./Popup/Popup"; // ⬅️ El componente genérico que exige
+import NewCard from "./form/NewCard/NewCard"; // ⬅️ Componente formulario 1
+import EditProfile from "./form/EditProfile/EditProfile"; // ⬅️ Componente formulario 2
+import EditAvatar from "./form/EditAvatar/EditAvatar"; // ⬅️ Componente formulario 3
+import ImagePopup from "./Popup/ImagePopup"; // ⬅️ Componente de imagen
 
 // 💡 Main ahora recibe los controladores de popup de App
 export default function Main({ onEditProfile, onAddPlace, onEditAvatar, onCardClick: openImagePopup }) {
@@ -15,6 +19,12 @@ export default function Main({ onEditProfile, onAddPlace, onEditAvatar, onCardCl
   
   // HOOKS Y ESTADOS DENTRO DEL COMPONENTE:
   const [cards, setCards] = useState([]); 
+
+  // POPUPS
+
+  const newCardPopup = { title: 'Nuevo lugar', children: <NewCard /> };
+  const editProfilePopup = { title: 'Editar perfil', children: <EditProfile /> };
+  const editAvatarPopup = { title: 'Cambiar foto de perfil', children: <EditAvatar /> };
   
   // ✅ Obtener currentUser del contexto para el perfil y likes
   const { currentUser } = useContext(CurrentUserContext);

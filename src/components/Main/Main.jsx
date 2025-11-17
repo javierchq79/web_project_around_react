@@ -7,10 +7,11 @@ import editIcon from '../../assets/images/Colebemis-Feather-Edit-3.svg';
 // Importaciones de la API y Componentes
 import { api } from '../../utils/api.js'; 
 import Card from './Card/Card';
+import Popup from "./Popup/Popup";
 
 // 💡 Main ahora recibe los controladores de popup de App
 export default function Main({ onEditProfile, onAddPlace, onEditAvatar, onCardClick: openImagePopup }) {
-import Popup from "./Popup/Popup";
+
   
   // HOOKS Y ESTADOS DENTRO DEL COMPONENTE:
   const [cards, setCards] = useState([]); 

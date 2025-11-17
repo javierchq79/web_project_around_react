@@ -10,6 +10,7 @@ import Card from './Card/Card';
 
 // 💡 Main ahora recibe los controladores de popup de App
 export default function Main({ onEditProfile, onAddPlace, onEditAvatar, onCardClick: openImagePopup }) {
+import Popup from "./Popup/Popup";
   
   // HOOKS Y ESTADOS DENTRO DEL COMPONENTE:
   const [cards, setCards] = useState([]); 

@@ -1,16 +1,16 @@
 import React, { useState, useEffect } from 'react';
-import { api } from './utils/api.js'; 
-import Header from './components/Header/Header';
-import Main from './components/Main/Main';
-import Footer from './components/Footer/Footer';
+import { api } from '../utils/api.js';
+import Header from '../components/Header/Header';
+import Main from '../components/Main/Main';
+import Footer from '../components/Footer/Footer';
 // Importaciones de Popups (Asegúrate de que las rutas sean correctas para tu proyecto)
-import EditProfile from './components/Main/form/EditProfile/EditProfile'; 
-import EditAvatar from './components/Main/form/EditAvatar/EditAvatar';
-import NewCard from './components/Main/form/NewCard/NewCard'; // ⬅️ Asumiendo que esta es la ruta de tu componente AddPlace
-import ImagePopup from './components/Main/Popup/ImagePopup';
+import EditProfile from '../components/Main/form/EditProfile/EditProfile'; 
+import EditAvatar from '../components/Main/form/EditAvatar/EditAvatar';
+import NewCard from '../components/Main/form/NewCard/NewCard'; // ⬅️ Asumiendo que esta es la ruta de tu componente AddPlace
+import ImagePopup from '../components/Main/Popup/ImagePopup';
 
 // Importar el objeto de contexto
-import { CurrentUserContext } from './contexts/CurrentUserContext.js'; 
+import { CurrentUserContext } from '../contexts/CurrentUserContext.js'; 
 
 export default function App() {
   // 1. Estados Levantados: Usuario y Tarjetas

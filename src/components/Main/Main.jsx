@@ -103,8 +103,27 @@ export default function Main({ onEditProfile, onAddPlace, onEditAvatar, onCardCl
       </section>
 
       {/* Galería (usa los props de App: cards, onCardLike, onCardDelete) */}
-      <section className="main__gallery">
-        {/* ... */}
+<section className="main__gallery">
+        <div className="main__gallery-list">
+
+          {/* ✅ ESTO DEBE ESTAR AQUÍ, justo donde está la clase gallery-list */}
+          {cards.map((card) => {
+            const isLiked = (card.likes || []).some(i => i._id === currentUser?._id);
+
+            return (
+              <Card
+                key={card._id}
+                card={card}
+                isLiked={isLiked} 
+                onCardClick={openImagePopup}
+                onCardLike={handleCardLike}
+                onCardDelete={handleCardDelete}
+              />
+            );
+          })}
+          {/* ----------------------------------------------------------------- */}
+
+        </div>
       </section>
 
       {/* 🛑 3. Reinstalar el Renderizado Condicional de Popups (Obsoleto, pero necesario) */}
